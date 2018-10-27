@@ -5,7 +5,7 @@ During whole-cell voltage-clamp experiments, the resistance across the patch pip
 
 ### How to use it:
 
-##### Input arguments:
+#### Input arguments:
 
 - **data:** trace of recorded currents, can be either single vector or multiple traces organized in an array or cell. When the input is an array, the function assumes that the shorter dimension represents the different trials/recordings, i.e. an array of the size 10,000x10 will be treated as 10 recordings with 10,000 data points each
 
@@ -16,5 +16,5 @@ During whole-cell voltage-clamp experiments, the resistance across the patch pip
 - **SR:** sampling rate during the recording in Hz
 - **fraction:** fraction of the remaining Rs which should be compensated (0-1), e.g. 1 if all the remaining Rs should be compensated
 
-##### Output:
+#### Output:
 - **dataCorrected:** data trace after Rs correction, format is identical to input (i.e. array or cell)
