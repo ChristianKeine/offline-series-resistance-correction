@@ -1,4 +1,6 @@
-# Offline series resistance correction
+# Offline series resistance correction 
+[![DOI](https://zenodo.org/badge/154884750.svg)](https://zenodo.org/badge/latestdoi/154884750)
+
 Matlab(tm) function to perform offline series resistance correction/compensation of recorded currents based on [*"Traynelis SF (1998) Software-based correction of single compartment series resistance errors. J Neurosci Methods 86:25–34."*](https://dx.doi.org/10.1016/S0165-0270(98)00140-X). 
 
 
