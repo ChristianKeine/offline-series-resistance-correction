@@ -1,5 +1,7 @@
 # Offline series resistance correction
-Matlab function to perform offline series resistance correction/compensation of recorded currents based on *"Traynelis SF (1998) Software-based correction of single compartment series resistance errors. J Neurosci Methods 86:25–34."* 
+Matlab(tm) function to perform offline series resistance correction/compensation of recorded currents based on [*"Traynelis SF (1998) Software-based correction of single compartment series resistance errors. J Neurosci Methods 86:25–34."*](https://dx.doi.org/10.1016/S0165-0270(98)00140-X). 
+
+
 
 During whole-cell voltage-clamp experiments, the resistance across the patch pipette (series resistance) can introduce considerable errors on the amplitude and kinetics of the recorded currents. While in most cases a large portion of this error can be corrected online by the patch-clamp amplifier, the remaining Rs can lead to erroneous estimation of currents. This is especially important if the amount of uncomensated Rs changes during the recording or differs between experiments. A simple software-based solution allows for the correction of the remaining Rs after the experiment (see original publication for details).
 
