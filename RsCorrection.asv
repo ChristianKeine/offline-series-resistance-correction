@@ -3,7 +3,7 @@ function [dataCorrected] = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, fraction)
 % performs offline series resistance correction for recorded currents
 % Input: 
 
-% - data = recorded current trace
+% - data = recorded current trace, can be single vector or multiple recordings as array or cell
 % - Rs = uncompensated series resistance (Rs) during the recording in Ohm, i.e. if the Rs during the experiment was 10 MOhm and online compensated by 50% by
 % the amplifier, the remaining uncompensated Rs will be 5 MOhm (5e6 Ohm = 5 MOhm)
 % - Cm = Membrane capacitance during the recording in Farad (e.g. 10e-12 F = 10 pF)
@@ -17,24 +17,24 @@ function [dataCorrected] = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, fraction)
 
 dataRaw = data;
 
-if ~iscell(data)
-[~,shortDim] = min(size(data));
-data = num2cell(data,shortDim);
+dataIsCell = iscell(data);
+
+if ~dataIsCell
+[~,dataDim] = max(size(data));
+data = num2cell(data,dataDim);
 end
 
 si = 1/SR;
-
-for 
-nPoints = length(data);
-
-
-
-
-tauLag = si*u.s;
-fc = (1/(2*pi*tauLag))/u.Hz;
+tauLag = si;
+fc = (1/(2*pi*tauLag));
 filterfactor = (1-exp(-2*pi*si*fc));
 
-Vlast = Vhold-data(1)*Rs;
+dataCorrected = cell(size(data));
+
+for iTrace = 1:numel(data) 
+nPoints = length(data{iTrace});
+
+Vlast = Vhold-data{iTrace}(1)*Rs; % 
 
 denominator = Vlast-Vrev;
 
@@ -43,11 +43,11 @@ if denominator ~= 0
 else
     fracCorr = 0;
 end
-data(1) = data(1)*(1-fracCorr);
+data{iTrace}(1) = data{iTrace}(1)*(1-fracCorr);
 
 
 for i=2:nPoints-1
-   Vthis = Vhold - data(i,iTrace)*Rs;
+   Vthis = Vhold - data{iTrace}(i)*Rs;
    if Vthis ~= Vrev
        fracCorr = fraction*(1-(Vhold-Vrev)/(Vthis-Vrev));
    else
@@ -55,19 +55,18 @@ for i=2:nPoints-1
    end
        Icap = Cm*(Vthis-Vlast)/si;
        Icap = Icap*filterfactor;
-       data(i-1) = data(i-1)-(fraction*Icap);
-       data(i-1) = data(i-1)*(1-fracCorr);
+       data{iTrace}(i-1) = data{iTrace}(i-1)-(fraction*Icap);
+       data{iTrace}(i-1) = data{iTrace}(i-1)*(1-fracCorr);
        Vlast = Vthis;
 end
 
-
-dataCorrected = data;
-   
-            
+% data{iTrace} = [NaN;data{iTrace}(1:end-1)];
         
 end
 
-
+if ~dataIsCell
+dataCorrected = cell2mat(data);
+end
 
 
 

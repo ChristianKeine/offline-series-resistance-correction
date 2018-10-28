@@ -34,7 +34,7 @@ dataCorrected = cell(size(data));
 for iTrace = 1:numel(data) 
 nPoints = length(data{iTrace});
 
-Vlast = Vhold-data{iTrace}(1)*Rs;
+Vlast = Vhold-data{iTrace}(1)*Rs; % initialize DC voltage at membrane
 
 denominator = Vlast-Vrev;
 
@@ -43,10 +43,10 @@ if denominator ~= 0
 else
     fracCorr = 0;
 end
-data{iTrace}(1) = data{iTrace}(1)*(1-fracCorr);
+data{iTrace}(1) = data{iTrace}(1)*(1-fracCorr); % DC correction for first data point
 
 
-for i=2:nPoints-1
+for i=2:nPoints-1 % loop through all other points
    Vthis = Vhold - data{iTrace}(i)*Rs;
    if Vthis ~= Vrev
        fracCorr = fraction*(1-(Vhold-Vrev)/(Vthis-Vrev));
@@ -60,8 +60,6 @@ for i=2:nPoints-1
        Vlast = Vthis;
 end
 
-   
-            
         
 end
 
