@@ -60,7 +60,7 @@ for i=2:nPoints-1 % loop through all other points
        Vlast = Vthis;
 end
 
-        
+
 end
 
 if ~dataIsCell
