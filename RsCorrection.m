@@ -1,4 +1,4 @@
-function [dataCorrected] = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, fraction)
+function dataCorrected = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, fraction)
 
 % performs offline series resistance correction for recorded currents
 % Input:
@@ -18,6 +18,8 @@ function [dataCorrected] = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, fraction)
 dataRaw = data; % not used
 
 dataIsCell = iscell(data);
+dataCorrected = cell(size(data));
+
 
 if ~dataIsCell
     [~,dataDim] = max(size(data));
@@ -29,14 +31,11 @@ tauLag = si;
 fc = (1/(2*pi*tauLag));
 filterfactor = (1-exp(-2*pi*si*fc));
 
-dataCorrected = cell(size(data));
-
 for iTrace = 1:numel(data)
     nPoints = length(data{iTrace});
     
     Vlast = Vhold-data{iTrace}(1)*Rs; % initialize DC voltage at membrane
-    
-    denominator = Vlast-Vrev;
+   denominator = Vlast-Vrev;
     
     if denominator ~= 0
         fracCorr = fraction*(1-(Vhold-Vrev)/denominator);
