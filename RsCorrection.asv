@@ -10,48 +10,52 @@ classdef RsCorrection
     % - Vhold = holding potential during the recording in Volts (e.g. -0.06 V =  -60 mV)
     % - Vrev = reversal potential of the recorded current in Volts (e.g. 0.01V = 10 mV)
     % - SR: Sampling rate during the recordings (in Hz)
-    % - fraction: fraction of how much of the remaining Rs should be compensated [0-1] (e.g. 1 if all remaining Rs should be compensated)
+    % - [optional] fraction: fraction of how much of the remaining Rs should be compensated [0-1] (e.g. 1 if all remaining Rs should be compensated)
     
     % Based on: "Traynelis SF (1998) Software-based correction of single
     % compartment series resistance errors. J Neurosci Methods 86:25–34."
+    %
+    % EXAMPLE: RsCorrection(data,Rs,C)
+    
+    
     
     properties
-        data
-        Rs
-        Cm
-        Vhold
-        Vrev
-        SR
-        fraction
+        dataRaw
+        dataCorrected
+        options
         
     end
     
     
     methods
-        function dataCorrected = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, varargin)
+        function obj = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, varargin)
             
-            
-            checkNumeric = @(n)validateattributes({'numeric','DimensionedVariable'},{'nonnegative','nonnan','nonempty'});
-            checkVoltage = @(n)validateattributes({'numeric','DimensionedVariable'},{'nonnan','nonempty'});
-            % checkRs = @(n)validateattributes(n,{'nonnan','nonempty'})
+            % CHECK INPUTS
+            checkData = @(n)validateattributes(cell2mat(n), {'numeric','DimensionedVariable','cell'},{'nonempty','nonnan'});
+            checkNumericPos = @(n)validateattributes(n, {'numeric','DimensionedVariable'},{'nonnegative','nonnan','nonempty'});
+            checkVoltage  = @(n)validateattributes(n, {'numeric','DimensionedVariable'},{'nonnan','nonempty'});
             
             P = inputParser;
-            P.addRequired('data',checkNumeric)
-            P.addRequired('SR',checkNumeric)
+            P.addRequired('data',checkData)
+            P.addRequired('Rs',checkNumericPos)
+            P.addRequired('Cm',checkNumericPos)
+            
             P.addRequired('Vhold',checkVoltage)
             P.addRequired('Vrev',checkVoltage)
-            P.addRequired('Rs',checkNumeric)
-            P.addRequired('Cm',checkNumeric)
-            P.addParameter('fraction',1,checkNumeric)
+            P.addRequired('SR',checkNumericPos)
+            
+            P.addParameter('fraction',1,checkNumericPos)
             
             P.parse(data, Rs, Cm, Vhold, Vrev, SR, varargin{:});
             opt = P.Results;
             
+            obj.options = opt;
+            obj.dataRaw = data;
             
-            dataRaw = data; % not used
             
+            
+                       
             dataIsCell = iscell(data);
-            dataCorrected = cell(size(data));
             
             
             if ~dataIsCell
@@ -71,7 +75,7 @@ classdef RsCorrection
                 denominator = Vlast-Vrev;
                 
                 if denominator ~= 0
-                    fracCorr = fraction*(1-(Vhold-Vrev)/denominator);
+                    fracCorr = opt.fraction*(1-(Vhold-Vrev)/denominator);
                 else
                     fracCorr = 0;
                 end
@@ -81,13 +85,13 @@ classdef RsCorrection
                 for i=2:nPoints-1 % loop through all other points
                     Vthis = Vhold - data{iTrace}(i)*Rs;
                     if Vthis ~= Vrev
-                        fracCorr = fraction*(1-(Vhold-Vrev)/(Vthis-Vrev));
+                        fracCorr = opt.fraction*(1-(Vhold-Vrev)/(Vthis-Vrev));
                     else
                         fracCorr = 0;
                     end
                     Icap = Cm*(Vthis-Vlast)/si;
                     Icap = Icap*filterfactor;
-                    data{iTrace}(i-1) = data{iTrace}(i-1)-(fraction*Icap);
+                    data{iTrace}(i-1) = data{iTrace}(i-1)-(opt.fraction*Icap);
                     data{iTrace}(i-1) = data{iTrace}(i-1)*(1-fracCorr);
                     Vlast = Vthis;
                 end
@@ -96,14 +100,11 @@ classdef RsCorrection
             end
             
             if ~dataIsCell
-                dataCorrected = cell2mat(data);
+                obj.dataCorrected = cell2mat(data);
+            else 
+                obj.dataCorrected = data;
             end
-            
-            
-            
-            
-            
-            
+
             
         end
     end

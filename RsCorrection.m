@@ -10,10 +10,14 @@ classdef RsCorrection
     % - Vhold = holding potential during the recording in Volts (e.g. -0.06 V =  -60 mV)
     % - Vrev = reversal potential of the recorded current in Volts (e.g. 0.01V = 10 mV)
     % - SR: Sampling rate during the recordings (in Hz)
-    % - fraction: fraction of how much of the remaining Rs should be compensated [0-1] (e.g. 1 if all remaining Rs should be compensated)
+    % - [optional] fraction: fraction of how much of the remaining Rs should be compensated [0-1] (e.g. 1 if all remaining Rs should be compensated)
     
     % Based on: "Traynelis SF (1998) Software-based correction of single
     % compartment series resistance errors. J Neurosci Methods 86:25–34."
+    %
+    % EXAMPLE: RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, 'fraction', 1)
+    
+    
     
     properties
         dataRaw
@@ -32,28 +36,25 @@ classdef RsCorrection
             checkVoltage  = @(n)validateattributes(n, {'numeric','DimensionedVariable'},{'nonnan','nonempty'});
             
             P = inputParser;
+            % REQUIRED INPUTS:
             P.addRequired('data',checkData)
             P.addRequired('Rs',checkNumericPos)
-            P.addRequired('Cm',checkNumericPos)
-            
+            P.addRequired('Cm',checkNumericPos)       
             P.addRequired('Vhold',checkVoltage)
             P.addRequired('Vrev',checkVoltage)
             P.addRequired('SR',checkNumericPos)
             
+            % OPTIONAL INPUT
             P.addParameter('fraction',1,checkNumericPos)
             
             P.parse(data, Rs, Cm, Vhold, Vrev, SR, varargin{:});
             opt = P.Results;
-            
             obj.options = opt;
             obj.dataRaw = data;
-            
-            
-            
-                       
+%%            
+            % INTERNALLY ALL DATA ARE TREATED AS CELLS                    
             dataIsCell = iscell(data);
-            
-            
+                 
             if ~dataIsCell
                 [~,dataDim] = max(size(data));
                 data = num2cell(data,dataDim);
@@ -67,7 +68,7 @@ classdef RsCorrection
             for iTrace = 1:numel(data)
                 nPoints = length(data{iTrace});
                 
-                Vlast = Vhold-data{iTrace}(1)*Rs; % initialize DC voltage at membrane
+                Vlast = Vhold-data{iTrace}(1)*Rs; % INITIALIZE DC VOLTAGE AT MEMBRANE
                 denominator = Vlast-Vrev;
                 
                 if denominator ~= 0
@@ -75,10 +76,10 @@ classdef RsCorrection
                 else
                     fracCorr = 0;
                 end
-                data{iTrace}(1) = data{iTrace}(1)*(1-fracCorr); % DC correction for first data point
+                data{iTrace}(1) = data{iTrace}(1)*(1-fracCorr); % DC CORRECTION FOR FIRST DATA POINT
                 
                 
-                for i=2:nPoints-1 % loop through all other points
+                for i=2:nPoints-1 % LOOP THROUGH ALL OTHER DATA POINTS
                     Vthis = Vhold - data{iTrace}(i)*Rs;
                     if Vthis ~= Vrev
                         fracCorr = opt.fraction*(1-(Vhold-Vrev)/(Vthis-Vrev));
@@ -100,12 +101,7 @@ classdef RsCorrection
             else 
                 obj.dataCorrected = data;
             end
-            
-            
-            
-            
-            
-            
+
             
         end
     end
