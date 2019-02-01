@@ -1,22 +1,22 @@
 classdef RsCorrection
     
-    % performs offline series resistance correction for recorded currents
-    % Input:
-    
-    % - data = recorded current trace, can be single vector or multiple recordings as array or cell
-    % - Rs = uncompensated series resistance (Rs) during the recording in Ohm, i.e. if the Rs during the experiment was 10 MOhm and online compensated by 50% by
-    % the amplifier, the remaining uncompensated Rs will be 5 MOhm (5e6 Ohm = 5 MOhm)
-    % - Cm = Membrane capacitance during the recording in Farad (e.g. 10e-12 F = 10 pF)
-    % - Vhold = holding potential during the recording in Volts (e.g. -0.06 V =  -60 mV)
-    % - Vrev = reversal potential of the recorded current in Volts (e.g. 0.01V = 10 mV)
-    % - SR: Sampling rate during the recordings (in Hz)
-    % - [optional] fraction: fraction of how much of the remaining Rs should be compensated [0-1] (e.g. 1 if all remaining Rs should be compensated)
-    
-    % Based on: "Traynelis SF (1998) Software-based correction of single
-    % compartment series resistance errors. J Neurosci Methods 86:25–34."
-    %
-    % EXAMPLE: RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, 'fraction', 1)
-    
+	% performs offline series resistance correction for recorded currents
+	% Input:
+	
+	% - data = recorded current trace, can be single vector or multiple recordings as array or cell
+	% - Rs = uncompensated series resistance (Rs) during the recording in Ohm, i.e. if the Rs during the experiment was 10 MOhm and online compensated by 50% by
+	% the amplifier, the remaining uncompensated Rs will be 5 MOhm (5e6 Ohm = 5 MOhm)
+	% - Cm = Membrane capacitance during the recording in Farad (e.g. 10e-12 F = 10 pF)
+	% - Vhold = holding potential during the recording in Volts (e.g. -0.06 V =  -60 mV)
+	% - Vrev = reversal potential of the recorded current in Volts (e.g. 0.01V = 10 mV)
+	% - SR: Sampling rate during the recordings (in Hz)
+	% - [optional] fraction: fraction of how much of the remaining Rs should be compensated [0-1] (e.g. 1 if all remaining Rs should be compensated)
+	
+	% Based on: "Traynelis SF (1998) Software-based correction of single
+	% compartment series resistance errors. J Neurosci Methods 86:25–34."
+	%
+	% EXAMPLE: RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, 'fraction', 1)
+	
     
     
     properties
