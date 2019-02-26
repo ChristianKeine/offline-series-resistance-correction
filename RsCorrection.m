@@ -2,7 +2,7 @@ classdef RsCorrection
     
 	% performs offline series resistance correction for recorded currents
 	% Input:
-	
+	%
 	% - data = recorded current trace, can be single vector or multiple recordings as array or cell
 	% - Rs = uncompensated series resistance (Rs) during the recording in Ohm, i.e. if the Rs during the experiment was 10 MOhm and online compensated by 50% by
 	% the amplifier, the remaining uncompensated Rs will be 5 MOhm (5e6 Ohm = 5 MOhm)
@@ -45,7 +45,7 @@ classdef RsCorrection
             P.addRequired('SR',checkNumericPos)
             
             % OPTIONAL INPUT
-            P.addParameter('fraction',1,checkNumericPos)
+            P.addOptional('fraction',1,checkNumericPos)
             
             P.parse(data, Rs, Cm, Vhold, Vrev, SR, varargin{:});
             opt = P.Results;

@@ -1,0 +1,16 @@
+{
+  "_schemaVersion": "1.0.0",
+  "RsCorrection":
+  {
+     "inputs":
+     [
+        {"name":"data", "kind":"required", "type":["numeric"], "purpose":"data trace to be corrected"},
+	{"name":"Rs", "kind":"required", "type":["numeric", ">0"], "purpose":"Remaining series resistance"},
+	{"name":"Cm", "kind":"required", "type":["numeric", ">0"], "purpose":"Cell membrane capacitance"},
+	{"name":"Vhold", "kind":"required", "type":["numeric"],"purpose":"Holding potential"},
+	{"name":"Vrev", "kind":"required", "type":["numeric"], "purpose":"Reversal Potential"},
+	{"name":"SR", "kind":"required", "type":["numeric",">0"], "purpose":"Sampling Rate"},
+	{"name":"fraction", "kind":"namevalue", "type":["numeric"],"purpose":"Fraction of Rs to be compensated"}
+     ]
+  }
+}
