@@ -31,7 +31,7 @@ classdef RsCorrection
         function obj = RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, varargin)
             
             % CHECK INPUTS
-            checkData = @(n)validateattributes(cell2mat(n), {'numeric','DimensionedVariable','cell'},{'nonempty','nonnan'});
+            checkData = @(n)validateattributes(n, {'numeric','DimensionedVariable','cell'},{'nonempty'});
             checkNumericPos = @(n)validateattributes(n, {'numeric','DimensionedVariable'},{'nonnegative','nonnan','nonempty'});
             checkVoltage  = @(n)validateattributes(n, {'numeric','DimensionedVariable'},{'nonnan','nonempty'});
             
