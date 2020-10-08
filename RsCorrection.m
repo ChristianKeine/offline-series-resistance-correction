@@ -9,10 +9,10 @@ classdef RsCorrection
 	% - Cm = Membrane capacitance during the recording in Farad (e.g. 10e-12 F = 10 pF)
 	% - Vhold = holding potential during the recording in Volts (e.g. -0.06 V =  -60 mV)
 	% - Vrev = reversal potential of the recorded current in Volts (e.g. 0.01V = 10 mV)
-	% - SR: Sampling rate during the recordings (in Hz)
-	% - [optional] fractionV: fraction  voltage error to be compensated [0-1] (e.g. 1 if voltage error should be fully compensated)
-	% - [optional] fractionC: fraction capacitative filtering error to be compensated [0-1] (e.g. 1 capacitative filtering error should be fully compensated)
-	% - [optional] fc: cutoff frequency for filter to smooth capacitative current correction (in Hz) (if omitted, fc is calculated from the sampling interval as fc = 1/(2 * pi * si))
+	% - SR = Sampling rate during the recordings (in Hz)
+	% - [optional] fractionV = voltage error to be compensated [0-1] (e.g. 1 if voltage error should be fully compensated)
+	% - [optional] fractionC = fraction capacitative filtering error to be compensated [0-1] (e.g. 1 capacitative filtering error should be fully compensated)
+	% - [optional] fc = cutoff frequency for filter to smooth capacitative current correction (in Hz) (if omitted, fc is calculated from the sampling interval as fc = 1/(2 * pi * si))
 
 	% Based on: "Traynelis SF (1998) Software-based correction of single
 	% compartment series resistance errors. J Neurosci Methods 86:25–34."
