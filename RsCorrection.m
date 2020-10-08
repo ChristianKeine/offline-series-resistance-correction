@@ -17,7 +17,7 @@ classdef RsCorrection
 	%
 	% EXAMPLE: RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, 'fraction', 1)
 	
-    
+     
     
     properties
         dataRaw
@@ -45,8 +45,10 @@ classdef RsCorrection
             P.addRequired('SR',checkNumericPos)
             
             % OPTIONAL INPUT
-            P.addOptional('fraction',1,checkNumericPos)
-            
+            P.addOptional('fractionC',1,checkNumericPos)
+            P.addOptional('fractionV',1,checkNumericPos)
+            P.addOptional('fc',NaN,checkNumericPos)
+
             P.parse(data, Rs, Cm, Vhold, Vrev, SR, varargin{:});
             opt = P.Results;
             obj.options = opt;
@@ -61,9 +63,13 @@ classdef RsCorrection
             end
             
             si = 1/SR;
+            
+            if isnan(opt.fc)
             tauLag = si;
-            fc = (1/(2*pi*tauLag));
-            filterfactor = (1-exp(-2*pi*si*fc));
+            opt.fc = 1/(2*pi*tauLag);
+            end
+            
+            filterfactor = (1-exp(-2*pi*si*opt.fc));
             
             for iTrace = 1:numel(data)
                 nPoints = length(data{iTrace});
@@ -72,7 +78,7 @@ classdef RsCorrection
                 denominator = Vlast-Vrev;
                 
                 if denominator ~= 0
-                    fracCorr = opt.fraction*(1-(Vhold-Vrev)/denominator);
+                    fracCorr = opt.fractionV*(1-(Vhold-Vrev)/denominator);
                 else
                     fracCorr = 0;
                 end
@@ -82,13 +88,13 @@ classdef RsCorrection
                 for i=2:nPoints-1 % LOOP THROUGH ALL OTHER DATA POINTS
                     Vthis = Vhold - data{iTrace}(i)*Rs;
                     if Vthis ~= Vrev
-                        fracCorr = opt.fraction*(1-(Vhold-Vrev)/(Vthis-Vrev));
+                        fracCorr = opt.fractionV*(1-(Vhold-Vrev)/(Vthis-Vrev));
                     else
                         fracCorr = 0;
                     end
                     Icap = Cm*(Vthis-Vlast)/si;
                     Icap = Icap*filterfactor;
-                    data{iTrace}(i-1) = data{iTrace}(i-1)-(opt.fraction*Icap);
+                    data{iTrace}(i-1) = data{iTrace}(i-1)-(opt.fractionC*Icap);
                     data{iTrace}(i-1) = data{iTrace}(i-1)*(1-fracCorr);
                     Vlast = Vthis;
                 end
