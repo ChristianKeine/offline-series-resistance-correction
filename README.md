@@ -20,13 +20,16 @@ During whole-cell voltage-clamp experiments, the resistance across the patch pip
 - **Vhold:** holding potential during the recording in Volts (e.g. -60 mV = 0.06 V)
 - **Vrev:** reversal potential of the recorded current in Volts (e.g. 10 mV = 0.01 V)
 - **SR:** sampling rate of the recording in Hz (e.g. 50 kHz = 50e3 Hz)
-- **fraction:** [optional, default=1] fraction of the remaining Rs which should be compensated (0-1), e.g. 1 if all the remaining Rs should be compensated
+- **fractionV:** [optional, default=1]: fraction of voltage error to be compensated [0-1] (e.g. 1 if voltage error should be fully compensated)
+- **fractionC:** [optional, default=1]: fraction of capacitative filtering error to be compensated [0-1] (e.g. 1 capacitative filtering error should be fully compensated)
+- **fc:** [optional]: cutoff frequency for filter to smooth capacitative current correction (in Hz) (if omitted, fc is calculated from the sampling interval as fc = 1/(2 * pi * si))
 
-To execute call function as `RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, 'fraction', fraction)`
+To execute call function as `RsCorrection(data, Rs, Cm, Vhold, Vrev, SR, 'fractionV', 1, 'fractionC', 1, 'fc', 10e3)
+	`
 
 #### Output:
 
 object containg the followin properties:
 - **dataRaw:** unprocessed input data 
 - **dataCorrected:** data trace after Rs correction, format is identical to input (i.e. array or cell)
-- **options:** structure containing the input parameters Rs, Cm, Vhold, Vrev, SR and fraction
+- **options:** structure containing the input parameters Rs, Cm, Vhold, Vrev, SR and fractions
