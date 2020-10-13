@@ -33,3 +33,5 @@ object containg the followin properties:
 - **dataRaw:** unprocessed input data 
 - **dataCorrected:** data trace after Rs correction, format is identical to input (i.e. array or cell)
 - **options:** structure containing the input parameters Rs, Cm, Vhold, Vrev, SR and fractions
+
+To perform the series resistance correction in **Igor Pro** check out [*Neuromatic*](https://github.com/SilverLabUCL/NeuroMatic/tree/master).
